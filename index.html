@@ -64,49 +64,57 @@
     </style>
 </head>
 
-<script>
-<body>// Obtener los parámetros de la URL
-const params = new URLSearchParams(window.location.search);
 
-// Obtener los valores de los parámetros
-var Ticket = params.has('Ticket') ? params.get('Ticket') : " ";
-var FechaHora = params.has('FechaHora') ? params.get('FechaHora') : " ";
-var Total = params.has('Total') ? params.get('Total') : " ";
-var FormaPago = params.has('FormaPago') ? params.get('FormaPago') : " ";
-var Recibido = params.has('Recibido') ? params.get('Recibido') : " ";
-var Cambio = params.has('Cambio') ? params.get('Cambio') : " ";
+<body>
+   <script>
+        // Obtener los parámetros de la URL
+        const params = new URLSearchParams(window.location.search);
+        
+        // Obtener los valores de los parámetros
+        var Ticket = params.has('Ticket') ? params.get('Ticket') : " ";
+        var FechaHora = params.has('FechaHora') ? params.get('FechaHora') : " ";
 
-//Recibe los datos de los servicios (separados por comas)
-var Descripción = params.has('Descripción') ? params.get('Descripción') : "No hay articulos";
-var Qty = params.has('Qty') ? params.get('Qty') : "0";
-var Precio = params.has('Precio') ? params.get('Precio') : "0.00";
-var Descuento = params.has('Descuento') ? params.get('Descuento') : "0";
-var Subtotal = params.has('Subtotal') ? params.get('Subtotal') : "0";
+        var Total = params.has('Total') ? params.get('Total') : " ";
+        var FormaPago = params.has('FormaPago') ? params.get('FormaPago') : " ";
+        var Recibido = params.has('Recibido') ? params.get('Recibido') : " ";
+	    var Cambio = params.has('Cambio') ? params.get('Cambio') : " ";
+	
 
-// Convertir strings a arrays
-var descripcionArray = Descripción.split(",").map(item => item.trim());
-var qtyArray = Qty.split(",").map(item => item.trim());
-var precioArray = Precio.split(",").map(item => item.trim());
-var descuentoArray = Descuento.split(",").map(item => parseFloat(item) * 100 + "%");
-var subtotalArray = Subtotal.split(",").map(item => item.trim());
+        //Recibe los datos de los servicios (separados por comas)
+        var Descripción = params.has('Descripción') ? params.get('Descripción') : "No hay articulos";
+        var Qty = params.has('Qty') ? params.get('Qty') : "0";
+        var Precio = params.has('Precio') ? params.get('Precio') : "0.00";
+	    var Descuento = params.has('Descuento') ? params.get('Descuento') : "0";
+	    var Subtotal = params.has('Subtotal') ? params.get('Subtotal') : "0";
+        
+        // Obtener el valor del descuento y convertirlo en porcentaje
+        Descuento = (parseFloat(Descuento) * 100).toLocaleString('es-ES', { minimumFractionDigits: 0 }) + "%";
 
-// Formatear valores monetarios
-Total = "$" + parseFloat(Total).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-Recibido = "$" + parseFloat(Recibido).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-Cambio = "$" + parseFloat(Cambio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        //Formato de 2 decimales
+        Total = "$" + parseFloat(Total).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        Subtotal = "$" + parseFloat(Subtotal).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        Precio = "$" + parseFloat(Precio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        Recibido = "$" + parseFloat(Recibido).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        Cambio = "$" + parseFloat(Cambio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        
+        //crea una lista de cada columna a partir de las comas.
+	    Descripción = Descripción.split(",");
+        Qty = Qty.split(","); 
 
-// Crear array de objetos con los datos de cada artículo
-var result = [];
-for (let i = 0; i < descripcionArray.length; i++) {
-    result.push({
-        Descrip: descripcionArray[i],
-        Cantidad: qtyArray[i],
-        Price: "$" + parseFloat(precioArray[i]).toLocaleString('es-ES', { minimumFractionDigits: 2 }),
-        Desc: descuentoArray[i],
-        Subttl: "$" + parseFloat(subtotalArray[i]).toLocaleString('es-ES', { minimumFractionDigits: 2 })
-    });
-}
-</script>
+        //Crea una lista para mostrar en cada fila de la tabla
+        var result = [];
+
+        Descripción.forEach(function(value, id) {
+            result[id] = {
+		    Descrip: Descripción[id],
+		    Cantidad: Qty[id],
+            Price: Precio,
+		    Desc: Descuento,
+		    Subttl: Subtotal,
+            };
+        });
+    </script>
+
         <!-- Contenedor del SVG -->
         <div class="svg-container">
 
