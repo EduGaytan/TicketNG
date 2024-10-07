@@ -98,9 +98,12 @@
         Cambio = "$" + parseFloat(Cambio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
         
         //crea una lista de cada columna a partir de las comas.
-	    Descripción = Descripción.split(",");
+	Descripción = Descripción.split(",");
         Qty = Qty.split(","); 
-
+	Precio = Precio.split(",");
+	Descuento = Descuento.split(",");
+	Subtotal = Subtotal.split(",");
+	   
         //Crea una lista para mostrar en cada fila de la tabla
         var result = [];
 
@@ -109,8 +112,8 @@
 		    Descrip: Descripción[id],
 		    Cantidad: Qty[id],
             	    Price: Precio[id],
-		    Desc: Descuento,
-		    Subttl: Subtotal,
+		    Desc: Descuento[i],
+		    Subttl: Subtotal[i],
             };
         });
     </script>
