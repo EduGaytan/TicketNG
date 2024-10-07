@@ -73,46 +73,47 @@
         // Obtener los valores de los parámetros
         var Ticket = params.has('Ticket') ? params.get('Ticket') : " ";
         var FechaHora = params.has('FechaHora') ? params.get('FechaHora') : " ";
-
-        var Total = params.has('Total') ? params.get('Total') : " ";
+        var Total = params.has('Total') ? params.get('Total') : "0";
         var FormaPago = params.has('FormaPago') ? params.get('FormaPago') : " ";
-        var Recibido = params.has('Recibido') ? params.get('Recibido') : " ";
-	    var Cambio = params.has('Cambio') ? params.get('Cambio') : " ";
-	
+        var Recibido = params.has('Recibido') ? params.get('Recibido') : "0";
+        var Cambio = params.has('Cambio') ? params.get('Cambio') : "0";
 
-        //Recibe los datos de los servicios (separados por comas)
+        // Recibe los datos de los artículos (separados por comas)
         var Descripción = params.has('Descripción') ? params.get('Descripción') : "No hay articulos";
         var Qty = params.has('Qty') ? params.get('Qty') : "0";
-        var Precio = params.has('Precio') ? params.get('Precio') : "0.00";
-	    var Descuento = params.has('Descuento') ? params.get('Descuento') : "0";
-	    var Subtotal = params.has('Subtotal') ? params.get('Subtotal') : "0";
-        
-        // Obtener el valor del descuento y convertirlo en porcentaje
-        Descuento = (parseFloat(Descuento) * 100).toLocaleString('es-ES', { minimumFractionDigits: 0 }) + "%";
+        var Precio = params.has('Precio') ? params.get('Precio') : "0";
+        var Descuento = params.has('Descuento') ? params.get('Descuento') : "0";
+        var Subtotal = params.has('Subtotal') ? params.get('Subtotal') : "0";
 
-        //Formato de 2 decimales
-        Total = "$" + parseFloat(Total).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        Subtotal = "$" + parseFloat(Subtotal).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        Precio = "$" + parseFloat(Precio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        Recibido = "$" + parseFloat(Recibido).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        Cambio = "$" + parseFloat(Cambio).toLocaleString('es-ES', { minimumFractionDigits: 2 });
-        
-        //crea una lista de cada columna a partir de las comas.
-	    Descripción = Descripción.split(",");
-        Qty = Qty.split(","); 
+        // Convertir las cadenas en arrays
+        Descripción = Descripción.split(" , ");
+        Qty = Qty.split(" , ");
+        Precio = Precio.split(" , ");
+        Descuento = Descuento.split(" , ");
+        Subtotal = Subtotal.split(" , ");
 
-        //Crea una lista para mostrar en cada fila de la tabla
+        // Crear una lista para mostrar en cada fila de la tabla
         var result = [];
 
         Descripción.forEach(function(value, id) {
             result[id] = {
-		    Descrip: Descripción[id],
-		    Cantidad: Qty[id],
-            Price: Precio,
-		    Desc: Descuento,
-		    Subttl: Subtotal,
+                Descrip: Descripción[id],
+                Cantidad: Qty[id],
+                Price: formatCurrency(parseFloat(Precio[id])),
+                Desc: (parseFloat(Descuento[id]) * 100) + "%",
+                Subttl: formatCurrency(parseFloat(Subtotal[id]))
             };
         });
+
+        // Función para formatear moneda
+        function formatCurrency(number) {
+            return "$" + number.toLocaleString('es-ES', { minimumFractionDigits: 2 });
+        }
+
+        // Formatear los totales
+        Total = formatCurrency(parseFloat(Total));
+        Recibido = formatCurrency(parseFloat(Recibido));
+        Cambio = formatCurrency(parseFloat(Cambio));
     </script>
 
         <!-- Contenedor del SVG -->
