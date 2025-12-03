@@ -2,188 +2,126 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=58mm, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket</title>
 
-	<style>
-        /*------ RESETEO BÁSICO Y PÁGINA ------*/
-	    * {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 14px;
-            color: #000;
-	    font-weight: bold;	    
+    <style>
+        /* --- AJUSTES DE IMPRESIÓN Y MÁRGENES (Punto 2) --- */
+        @page {
+            margin: 0; /* Elimina márgenes de la impresora */
+            size: 58mm auto;
         }
 
-	    @page {
-        	margin: 2mm 0 0 0;
-            size: 58mm auto;
-	    }
+        body {
+            margin: 0;
+            padding: 1mm 2mm; /* Pequeño resguardo interno */
+            width: 54mm; /* Ancho seguro para impresoras de 58mm */
+            background-color: #fff;
+        }
 
-	    body {
-        	margin: 0;
-            padding: 0 1mm;
-            width: 56mm;
-	    }
+        /* Tipografía Sans-Serif para ahorrar espacio horizontal */
+        * {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            font-size: 12px; /* Tamaño ajustado para legibilidad */
+            color: #000;
+            box-sizing: border-box;
+            font-weight: 600; /* Negrita simulada */
+        }
 
-        /*------ LOGO ------*/
+        /* --- LOGO --- */
         .svg-container {
             width: 100%;
             text-align: center;
-            margin-bottom: 5mm;
+            margin-bottom: 2mm;
         }
         #logo {
-            max-width: 80%;
+            max-width: 90%;
             height: auto;
-            display: block;
-            margin: 0 auto;
-            /* === CAMBIO: BORDE AÑADIDO PARA DIAGNÓSTICO === */
-            border: 0px solid red; /* Elimina esto cuando el logo se vea bien */
         }
 
-        /*------ INFORMACIÓN GENERAL DEL TICKET ------*/
-	    .ticket-header, .ticket-footer, .totals-section, .items-section {
+        /* --- ENCABEZADOS Y PIE --- */
+        .ticket-header, .ticket-footer {
             text-align: center;
-            margin-bottom: 3mm;
-	    }
-        .ticket-header p, .ticket-footer p {
-            margin: 1mm 0;
-            line-height: 1.2;
+            margin-bottom: 2mm;
         }
+        .ticket-header p, .ticket-footer p {
+            margin: 0.5mm 0;
+            line-height: 1.2;
+            font-size: 11px;
+        }
+
+        /* --- LÍNEAS DE INFORMACIÓN (Fecha, Ticket) --- */
         .info-line {
             display: flex;
             justify-content: space-between;
-            margin: 1mm 0;
-            padding: 0 2mm;
-        }
-        .info-line .label {
-            font-weight: bold;
-            text-align: left;
-            padding-right: 5px;
-        }
-        .info-line .value {
-            text-align: right;
+            margin: 0.5mm 0;
+            font-size: 11px;
         }
 
-        /*------ TABLA DE ARTÍCULOS ------*/
-	    .items-table {
-	        width: 100%;
-	        border-collapse: collapse;
-            margin-top: 3mm;
-            margin-bottom: 3mm;
-	    }
-	    .items-table th, .items-table td {
-	        border: none;
-	        padding: 1mm 0.5mm;
-            vertical-align: top;
-	    }
-        .items-table thead th {
-            font-weight: bold;
+        /* --- TABLA DE ARTÍCULOS --- */
+        .items-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2mm;
+            margin-bottom: 2mm;
+        }
+        .items-table th {
             border-bottom: 1px dashed #000;
-            padding-bottom: 1.5mm;
             text-align: right;
+            padding-bottom: 1mm;
+            font-size: 11px;
         }
+        .items-table td {
+            padding: 1mm 0;
+            vertical-align: top;
+            font-size: 11px;
+        }
+        /* Alineación y anchos de columnas */
+        .col-desc { text-align: left; width: 45%; }
+        .col-qty  { text-align: center; width: 10%; }
+        .col-price { text-align: right; width: 20%; }
+        .col-subtotal { text-align: right; width: 25%; }
 
-        /* Ajuste específico de anchos y alineación por columna (SIN DESCUENTO) */
-        .items-table th.col-desc, .items-table td.col-desc {
-            width: 45%;
-            text-align: left;
-        }
-        .items-table th.col-qty, .items-table td.col-qty {
-            width: 10%;
-            text-align: center;
-        }
-         .items-table th.col-price, .items-table td.col-price {
-            width: 20%;
-        }
-        .items-table th.col-subtotal, .items-table td.col-subtotal {
-            width: 25%;
-        }
-        .items-table tbody td {
-             padding-top: 1mm;
-        }
-
-        /*------ SEPARADOR ------*/
+        /* --- SEPARADOR --- */
         .separator {
             border-top: 1px dashed #000;
-            margin: 3mm 0;
-            height: 0;
-            overflow: hidden;
+            margin: 2mm 0;
         }
 
-        /*------ TABLA DE TOTALES ------*/
-		.totals-table {
+        /* --- TABLA DE TOTALES --- */
+        .totals-table {
             width: 100%;
-	        border-collapse: collapse;
-            margin-top: 3mm;
-		}
+            border-collapse: collapse;
+        }
         .totals-table td {
-            padding: 1mm 2mm;
+            padding: 0.5mm 0;
             border: none;
         }
         .totals-table td.label {
             text-align: right;
-            font-weight: bold;
-            width: 50%;
+            padding-right: 2mm;
+            width: 60%;
         }
         .totals-table td.value {
             text-align: right;
-            width: 50%;
+            width: 40%;
         }
-        .totals-table tr.total-final td {
-            font-weight: bold;
-            font-size: 14px;
-        }
+        .text-lg { font-size: 14px; } /* Total más grande */
 
-        /*------ PIE DE TICKET ------*/
-        .ticket-footer {
-            margin-top: 5mm;
+        /* --- CÓDIGO DE BARRAS (Punto 3) --- */
+        .barcode-container {
+            text-align: center;
+            margin-top: 3mm;
+            margin-bottom: 5mm;
         }
-         .ticket-footer p {
-            font-size: 14px;
-            line-height: 1.3;
-         }
+        .barcode-container img {
+            max-width: 90%;
+            height: auto;
+        }
     </style>
 </head>
 
 <body>
-   <script>
-        // --- Tu código JavaScript (sin cambios) ---
-        const params = new URLSearchParams(window.location.search);
-        var Ticket = params.has('Ticket') ? params.get('Ticket') : " ";
-        var FechaHora = params.has('FechaHora') ? params.get('FechaHora') : " ";
-        var Total = params.has('Total') ? params.get('Total') : "0";
-        var FormaPago = params.has('FormaPago') ? params.get('FormaPago') : " ";
-        var Recibido = params.has('Recibido') ? params.get('Recibido') : "0";
-        var Cambio = params.has('Cambio') ? params.get('Cambio') : "0";
-        var Descripción = params.has('Descripción') ? params.get('Descripción') : "No hay articulos";
-        var Qty = params.has('Qty') ? params.get('Qty') : "0";
-        var Precio = params.has('Precio') ? params.get('Precio') : "0";
-        var Subtotal = params.has('Subtotal') ? params.get('Subtotal') : "0";
-        Descripción = Descripción.split(" , ");
-        Qty = Qty.split(" , ");
-        Precio = Precio.split(" , ");
-        Subtotal = Subtotal.split(" , ");
-        var result = [];
-        Descripción.forEach(function(value, id) {
-            if (Descripción[id] && Qty[id] && Precio[id] && Subtotal[id]) {
-                result[id] = {
-                    Descrip: Descripción[id],
-                    Cantidad: Qty[id],
-                    Price: formatCurrency(parseFloat(Precio[id])),
-                    Subttl: formatCurrency(parseFloat(Subtotal[id]))
-                };
-            }
-        });
-        function formatCurrency(number) {
-             if (isNaN(number)) return "$0.00";
-            return "$" + number.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-        Total = formatCurrency(parseFloat(Total));
-        Recibido = formatCurrency(parseFloat(Recibido));
-        Cambio = formatCurrency(parseFloat(Cambio));
-        // --- Fin del código JavaScript de datos ---
-    </script>
 
     <!-- Contenedor del SVG (Logo) -->
     <div class="svg-container">
@@ -219,109 +157,204 @@
         </svg>
     </div>
 
-	<!-- El resto del ticket continúa aquí -->
-	<div class="ticket-header">
-		<p>RFC: GAOE6603281X3</p>
-		<p>Av. Hidalgo #8 Moroleón, Gto.</p>
-		<p>Tel: 445 458 2720</p>
-		<p>WhatsApp: 445 100 9780</p>
-		<p>www.novedadesgaytan.com.mx</p>
-	 	<br>
-		<!-- ... resto del header ... -->
-	</div>
-
-	<!-- Número de ticket y Fecha/Hora -->
-    <div class="info-line">
-        <span class="label"># Ticket:</span>
-        <span class="value" id="Ticket_id"></span>
-    </div>
-    <div class="info-line">
-        <span class="label">Fecha y Hora:</span>
-        <span class="value" id="FechaHora_id"></span>
+    <!-- DATOS FIJOS DEL NEGOCIO -->
+    <div class="ticket-header">
+        <p style="font-size:14px; margin-bottom:1mm;">NOVEDADES GAYTAN</p>
+        <p>RFC: GAOE6603281X3</p>
+        <p>Av. Hidalgo #8 Moroleón, Gto.</p>
+        <p>Tel: 445 458 2720</p>
+        <p>WhatsApp: 445 100 9780</p>
+        <p>www.novedadesgaytan.com.mx</p>
     </div>
 
-	<!-- Detalles de la venta (Tabla de artículos SIN Descuento) -->
-	<div class="items-section">
-	    <table class="items-table">
-	        <thead>
-	            <tr>
-			        <th class="col-desc">Descripción</th>
-			        <th class="col-qty">Qty</th>
-	                <th class="col-price">P.U.</th>
-	                <th class="col-subtotal">Subtotal</th>
-	            </tr>
-            </thead>
-	        <tbody id="tablaBody">
-                <!-- Las filas se insertarán aquí por JavaScript -->
-            </tbody>
+    <!-- DATOS VARIABLES -->
+    <div class="info-line">
+        <span># Ticket:</span>
+        <span id="Ticket_id"></span>
+    </div>
+    <div class="info-line">
+        <span>Fecha:</span>
+        <span id="FechaHora_id"></span>
+    </div>
+    <div class="info-line">
+        <span>Tipo:</span>
+        <span id="Tipo_id"></span>
+    </div>
+
+    <!-- TABLA DE PRODUCTOS -->
+    <table class="items-table">
+        <thead>
+            <tr>
+                <th class="col-desc">Desc</th>
+                <th class="col-qty">Cant</th>
+                <th class="col-price">P.U.</th>
+                <th class="col-subtotal">Importe</th>
+            </tr>
+        </thead>
+        <tbody id="tablaBody">
+            <!-- JS Generará esto -->
+        </tbody>
+    </table>
+
+    <div class="separator"></div>
+
+    <!-- SECCIÓN DE TOTALES DINÁMICA -->
+    <div class="totals-section">
+        <table class="totals-table" id="totalsTable">
+            <!-- JS Generará esto según el tipo de ticket -->
         </table>
     </div>
 
-    <!-- Separador -->
     <div class="separator"></div>
 
-    <!-- Sección de Totales -->
-    <div class="totals-section">
-        <table class="totals-table">
-            <tr class="total-final">
-		        <td class="label">Total:</td>
-		        <td class="value" id="Total"></td>
-		    </tr>
-		    <tr>
-		        <td class="label">Forma pago:</td>
-		        <td class="value" id="FormaPago"></td>
-		    </tr>
-		    <tr>
-		        <td class="label">Recibido:</td>
-		        <td class="value" id="Recibido"></td>
-		    </tr>
-		    <tr>
-		        <td class="label">Cambio:</td>
-		        <td class="value" id="Cambio"></td>
-		    </tr>
-		</table>
-    </div>
-
-    <!-- Mensajes Finales (Pie de ticket) -->
+    <!-- PIE DE TICKET -->
     <div class="ticket-footer">
         <p>*** Gracias por su compra ***</p>
-        <p>Necesario ticket para cambio, límite 30 días.</p>
+        <p>Necesario ticket para cambio.</p>
+        <p>Límite 30 días.</p>
     </div>
 
-    <!-- Scripts para poblar datos y para imprimir -->
-    <script>
-        // --- Poblar los elementos HTML con los datos ---
-        document.getElementById("Ticket_id").textContent = Ticket;
-        document.getElementById("FechaHora_id").textContent = FechaHora;
+    <!-- CÓDIGO DE BARRAS -->
+    <div class="barcode-container">
+        <img id="barcodeImg" src="" alt="Barcode">
+    </div>
 
-        var tablaBody = document.getElementById("tablaBody");
-        result.forEach(function(row) {
-            var newRow = document.createElement("tr");
-            newRow.innerHTML = `
-                <td class="col-desc">${row.Descrip}</td>
-                <td class="col-qty">${row.Cantidad}</td>
-                <td class="col-price">${row.Price}</td>
-                <td class="col-subtotal">${row.Subttl}</td>
-            `;
-            tablaBody.appendChild(newRow);
+    <script>
+        // --- 1. OBTENCIÓN DE PARÁMETROS (Punto 1: Nuevas Variables) ---
+        const params = new URLSearchParams(window.location.search);
+
+        // Función auxiliar para limpiar datos nulos
+        const getP = (name, def = "") => params.has(name) ? params.get(name) : def;
+        const getNum = (name) => parseFloat(getP(name, "0")) || 0;
+
+        // Datos Generales
+        const ticketData = {
+            id: getP('Ticket'),
+            fecha: getP('FechaHora'),
+            tipo: getP('TipoTicket', 'Venta'), // Venta, Cambio, Diferido
+            formaPago: getP('FormaPago'),
+            barcodeUrl: getP('BarCode')
+        };
+
+        // Listas (Arrays)
+        // Nota: Appsheet envía listas separadas por " , " (espacio coma espacio)
+        let descripcion = getP('Descripción', 'Varios').split(" , ");
+        let qty = getP('Qty', '1').split(" , ");
+        // Usamos las nuevas variables de la fórmula: PrecioDescuento y SubtotalDescuento
+        let precio = getP('PrecioDescuento', '0').split(" , ");
+        let subtotal = getP('SubtotalDescuento', '0').split(" , ");
+
+        // Formateador de moneda
+        const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        // --- 2. POBLAR ENCABEZADOS ---
+        document.getElementById("Ticket_id").textContent = ticketData.id;
+        document.getElementById("FechaHora_id").textContent = ticketData.fecha;
+        document.getElementById("Tipo_id").textContent = ticketData.tipo.toUpperCase();
+
+        // --- 3. GENERAR TABLA DE PRODUCTOS ---
+        const tablaBody = document.getElementById("tablaBody");
+        
+        descripcion.forEach((desc, index) => {
+            // Validación simple para asegurar que existen datos en esa posición
+            if(desc) {
+                let p = parseFloat(precio[index]) || 0;
+                let s = parseFloat(subtotal[index]) || 0;
+                let q = qty[index] || 1;
+
+                let row = document.createElement("tr");
+                row.innerHTML = `
+                    <td class="col-desc">${desc}</td>
+                    <td class="col-qty">${q}</td>
+                    <td class="col-price">${money(p)}</td>
+                    <td class="col-subtotal">${money(s)}</td>
+                `;
+                tablaBody.appendChild(row);
+            }
         });
 
-        document.getElementById("Total").textContent = Total;
-        document.getElementById("Recibido").textContent = Recibido;
-        document.getElementById("FormaPago").textContent = FormaPago;
-        document.getElementById("Cambio").textContent = Cambio;
+        // --- 4. LÓGICA DE TOTALES SEGÚN TIPO (Punto 1) ---
+        const totalsTable = document.getElementById("totalsTable");
+        let htmlTotales = "";
 
-        // --- Script de impresión y cierre ---
+        // Variables comunes
+        let recibido = getNum('Recibido');
+        let cambio = getNum('Cambio');
+        let totalGeneral = getNum('Total'); // Puede ser Total TPV o DiferenciaTotal según fórmula
+
+        // Lógica Switch según Tipo de Ticket
+        switch (ticketData.tipo) {
+            case "Venta":
+                let ahorro = getNum('Ahorro');
+                htmlTotales += `
+                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
+                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
+                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
+                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
+                `;
+                if(ahorro > 0) {
+                    htmlTotales += `<tr><td class="label">Usted Ahorró:</td><td class="value">${money(ahorro)}</td></tr>`;
+                }
+                break;
+
+            case "Cambio":
+                let saldoCliente = getNum('SaldoAFavorCliente');
+                let saldoEmpresa = getNum('SaldoAFavorEmpresa');
+                let diferencia = getNum('DiferenciaTotal'); // Mapeado a Total en tu fórmula pero conceptualmente es diferencia
+                
+                htmlTotales += `
+                    <tr><td class="label">Saldo a Favor Cliente:</td><td class="value">${money(saldoCliente)}</td></tr>
+                    <tr><td class="label">Nuevo Consumo:</td><td class="value">${money(saldoEmpresa)}</td></tr>
+                    <tr class="text-lg"><td class="label">DIFERENCIA:</td><td class="value">${money(diferencia)}</td></tr>
+                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
+                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
+                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
+                `;
+                break;
+
+            case "Diferido":
+                let abono = getNum('Abono');
+                let restante = getNum('Restante');
+                
+                htmlTotales += `
+                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
+                    <tr><td class="label">Abono Realizado:</td><td class="value">${money(abono)}</td></tr>
+                    <tr><td class="label">Saldo Restante:</td><td class="value">${money(restante)}</td></tr>
+                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
+                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
+                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
+                `;
+                break;
+                
+            default:
+                // Fallback por defecto (Venta simple)
+                htmlTotales += `
+                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
+                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
+                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
+                `;
+        }
+
+        totalsTable.innerHTML = htmlTotales;
+
+        // --- 5. CÓDIGO DE BARRAS (Punto 3) ---
+        const barcodeImg = document.getElementById("barcodeImg");
+        if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
+            barcodeImg.src = ticketData.barcodeUrl;
+        } else {
+            // Ocultar si no hay URL
+            document.querySelector('.barcode-container').style.display = 'none';
+        }
+
+        // --- IMPRESIÓN ---
         window.onload = function() {
+            // Pequeño retardo para asegurar que el código de barras cargue
             setTimeout(function() {
                 window.print();
-                setTimeout(function() {
-                    window.close();
-                    console.log("Intento de cierre de ventana.");
-                }, 1000);
-            }, 500);
+                // Opcional: Cerrar después de imprimir
+                // setTimeout(function() { window.close(); }, 500); 
+            }, 800);
         }
     </script>
-
 </body>
 </html>
