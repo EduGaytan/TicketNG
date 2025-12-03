@@ -2,12 +2,11 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- Forzamos el ancho a 58mm para evitar zoom innecesario -->
     <meta name="viewport" content="width=58mm, initial-scale=1.0">
     <title>Ticket</title>
 
     <style>
-        /* --- AJUSTES DE IMPRESIÓN --- */
+        /* --- CONFIGURACIÓN DE PÁGINA --- */
         @page {
             margin: 0;
             size: 58mm auto;
@@ -15,43 +14,44 @@
 
         body {
             margin: 0;
-            /* Margen izquierdo mínimo (2mm) y anulamos el derecho para evitar cortes */
-            padding: 2mm 0 2mm 2mm; 
+            /* Reduje el padding izquierdo a 1mm para ganar espacio */
+            padding: 2mm 0 2mm 1mm; 
             width: 58mm;
             background-color: #fff;
         }
 
-        /* --- CONTENEDOR DE SEGURIDAD --- */
-        /* Reducido a 44mm. Esto garantiza que entre en el área real de impresión */
+        /* --- CONTENEDOR "TÉRMINO MEDIO" --- */
+        /* Aumentado de 44mm a 48mm. 
+           Esto debería llenar el papel sin llegar a la zona de corte */
         .ticket-container {
-            width: 44mm; 
-            text-align: left; /* Importante: Alineado a la izquierda */
+            width: 48mm; 
+            text-align: left;
         }
 
-        /* Tipografía compacta y limpia */
+        /* --- TIPOGRAFÍA --- */
         * {
             font-family: Arial, Helvetica, sans-serif; 
-            font-size: 10px; /* Reducido para asegurar que quepa todo */
+            font-size: 12px; /* AUMENTADO: De 10px a 12px */
             color: #000;
             box-sizing: border-box;
             font-weight: 600;
-            line-height: 1.2;
+            line-height: 1.15; /* Interlineado ligeramente ajustado */
         }
 
         /* --- LOGO --- */
         .svg-container {
             width: 100%;
-            text-align: center; /* El logo sí puede ir centrado en su caja */
+            text-align: center;
             margin-bottom: 2mm;
         }
         #logo {
-            max-width: 90%;
+            max-width: 95%; /* Logo un poco más grande */
             height: auto;
         }
 
-        /* --- TÍTULO GIGANTE --- */
+        /* --- TÍTULO PRINCIPAL --- */
         .business-name {
-            font-size: 15px !important; /* Grande pero seguro */
+            font-size: 16px !important; /* Grande y claro */
             font-weight: 900 !important;
             text-transform: uppercase;
             display: block;
@@ -62,22 +62,21 @@
         /* --- ENCABEZADOS Y PIE --- */
         .ticket-header, .ticket-footer {
             text-align: center;
-            margin-bottom: 2mm;
+            margin-bottom: 3mm;
         }
-        /* Texto de contacto un poco más pequeño */
         .ticket-header p {
-            font-size: 9px; 
+            font-size: 11px; /* Datos de contacto legibles */
             margin: 1px 0;
         }
 
-        /* --- LÍNEAS DE INFORMACIÓN --- */
+        /* --- INFO TICKET (Fecha, ID) --- */
         .info-line {
             display: flex;
             justify-content: space-between;
             margin: 1px 0;
         }
         .info-line span {
-            font-size: 10px;
+            font-size: 12px;
         }
 
         /* --- TABLA DE ARTÍCULOS --- */
@@ -91,18 +90,20 @@
             border-bottom: 1px dashed #000;
             text-align: right;
             padding-bottom: 1mm;
-            font-size: 9px;
+            font-size: 11px; /* Encabezados compactos */
         }
-        /* Ajuste de columnas milimétrico */
-        .col-desc { text-align: left; width: 45%; }
+        
+        /* Ajuste de columnas para soportar la letra más grande */
+        .col-desc { text-align: left; width: 40%; } /* Reduje un poco para dar espacio a precios */
         .col-qty  { text-align: center; width: 10%; }
-        .col-price { text-align: right; width: 20%; }
-        .col-subtotal { text-align: right; width: 25%; }
+        .col-price { text-align: right; width: 23%; }
+        .col-subtotal { text-align: right; width: 27%; }
 
         .items-table td {
             padding: 2px 0;
             vertical-align: top;
-            font-size: 10px;
+            font-size: 12px; /* Productos en tamaño 12px */
+            word-wrap: break-word; /* Evita que palabras largas rompan el ancho */
         }
 
         /* --- SEPARADOR --- */
@@ -111,42 +112,41 @@
             margin: 2mm 0;
         }
 
-        /* --- TABLA DE TOTALES --- */
+        /* --- TOTALES --- */
         .totals-table {
             width: 100%;
             border-collapse: collapse;
         }
         .totals-table td {
-            padding: 1px 0;
+            padding: 2px 0;
             border: none;
-            font-size: 10px;
+            font-size: 12px; /* Totales en tamaño 12px */
         }
         .totals-table td.label {
             text-align: right;
-            padding-right: 3px;
-            width: 60%;
+            padding-right: 4px;
+            width: 55%;
         }
         .totals-table td.value {
             text-align: right;
-            width: 40%;
+            width: 45%;
         }
-        /* El Total Final un poco más grande */
-        .text-lg { font-size: 12px !important; font-weight: bold; } 
+        .text-lg { font-size: 14px !important; font-weight: 800; } 
 
-        /* --- PIE --- */
+        /* --- PIE DE PÁGINA --- */
         .ticket-footer p {
-            font-size: 9px;
+            font-size: 11px;
             margin: 2px 0;
         }
 
         /* --- CÓDIGO DE BARRAS --- */
         .barcode-container {
             text-align: center;
-            margin-top: 3mm;
+            margin-top: 2mm;
             margin-bottom: 5mm;
         }
         .barcode-container img {
-            max-width: 95%;
+            max-width: 100%;
             height: auto;
         }
     </style>
@@ -157,10 +157,10 @@
     <div class="ticket-container">
         <!-- LOGO -->
         <div class="svg-container">
-            <!-- REEMPLAZA ESTA IMAGEN CON TU SVG REAL -->
+            <!-- RECUERDA PONER TU SVG O IMAGEN AQUÍ -->
             <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Logo" id="logo_img" style="display:none;"> 
             <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 180" preserveAspectRatio="xMidYMid meet">
-                <!-- Pega aquí el path de tu logo -->
+                <!-- Tu path del logo va aquí -->
             </svg>
         </div>
 
@@ -224,7 +224,7 @@
     </div>
 
     <script>
-        // --- 1. DATOS ---
+        // --- 1. LECTURA DE DATOS ---
         const params = new URLSearchParams(window.location.search);
         const getP = (name, def = "") => params.has(name) ? params.get(name) : def;
         const getNum = (name) => parseFloat(getP(name, "0")) || 0;
@@ -237,12 +237,12 @@
             barcodeUrl: getP('BarCode')
         };
 
-        // --- 2. RENDERIZADO BÁSICO ---
+        // --- 2. RENDERIZADO DATOS FIJOS ---
         document.getElementById("Ticket_id").textContent = ticketData.id;
         document.getElementById("FechaHora_id").textContent = ticketData.fecha;
         document.getElementById("Tipo_id").textContent = ticketData.tipo.toUpperCase();
 
-        // --- 3. PRODUCTOS ---
+        // --- 3. GENERAR LISTA DE PRODUCTOS ---
         let descripcion = getP('Descripción', 'Varios').split(" , ");
         let qty = getP('Qty', '1').split(" , ");
         let precio = getP('PrecioDescuento', '0').split(" , ");
@@ -256,6 +256,7 @@
                 let s = parseFloat(subtotal[index]) || 0;
                 let q = qty[index] || 1;
                 let row = document.createElement("tr");
+                // Insertamos filas
                 row.innerHTML = `
                     <td class="col-desc">${desc}</td>
                     <td class="col-qty">${q}</td>
@@ -266,7 +267,7 @@
             }
         });
 
-        // --- 4. TOTALES (Lógica Switch) ---
+        // --- 4. CÁLCULO DE TOTALES (Switch) ---
         const totalsTable = document.getElementById("totalsTable");
         let htmlTotales = "";
         let recibido = getNum('Recibido');
@@ -314,7 +315,7 @@
         }
         totalsTable.innerHTML = htmlTotales;
 
-        // --- 5. BARCODE ---
+        // --- 5. MOSTRAR CÓDIGO DE BARRAS ---
         const barcodeImg = document.getElementById("barcodeImg");
         if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
             barcodeImg.src = ticketData.barcodeUrl;
@@ -322,14 +323,13 @@
             document.querySelector('.barcode-container').style.display = 'none';
         }
 
-        // --- 6. IMPRESIÓN Y CIERRE (Restaurado del original) ---
+        // --- 6. IMPRIMIR Y CERRAR ---
         window.onload = function() {
             setTimeout(function() {
                 window.print();
                 setTimeout(function() {
                     window.close();
-                    // Fallback por si window.close es bloqueado, intenta navegar atrás
-                    // history.back(); 
+                    // history.back(); // Opción alternativa si close() falla
                 }, 1000);
             }, 500);
         }
