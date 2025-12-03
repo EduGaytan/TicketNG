@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Forzamos el ancho a 58mm para evitar zoom innecesario -->
+    <meta name="viewport" content="width=58mm, initial-scale=1.0">
     <title>Ticket</title>
 
     <style>
@@ -14,33 +15,33 @@
 
         body {
             margin: 0;
-            padding: 0;
+            /* Margen izquierdo mínimo (2mm) y anulamos el derecho para evitar cortes */
+            padding: 2mm 0 2mm 2mm; 
+            width: 58mm;
             background-color: #fff;
-            /* Usamos Flexbox para centrar el contenido en la tira de papel */
-            display: flex;
-            justify-content: center; 
         }
 
-        /* --- CONTENEDOR PRINCIPAL (EL TRUCO) --- */
-        /* Reducimos a 45mm para asegurar que entre en el área imprimible real */
+        /* --- CONTENEDOR DE SEGURIDAD --- */
+        /* Reducido a 44mm. Esto garantiza que entre en el área real de impresión */
         .ticket-container {
-            width: 45mm; 
-            padding-top: 1mm;
+            width: 44mm; 
+            text-align: left; /* Importante: Alineado a la izquierda */
         }
 
-        /* Tipografía */
+        /* Tipografía compacta y limpia */
         * {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
-            font-size: 11px; /* Reduje 1px para ganar espacio horizontal */
+            font-family: Arial, Helvetica, sans-serif; 
+            font-size: 10px; /* Reducido para asegurar que quepa todo */
             color: #000;
             box-sizing: border-box;
             font-weight: 600;
+            line-height: 1.2;
         }
 
         /* --- LOGO --- */
         .svg-container {
             width: 100%;
-            text-align: center;
+            text-align: center; /* El logo sí puede ir centrado en su caja */
             margin-bottom: 2mm;
         }
         #logo {
@@ -48,13 +49,14 @@
             height: auto;
         }
 
-        /* --- TÍTULO PRINCIPAL (Petición Específica) --- */
+        /* --- TÍTULO GIGANTE --- */
         .business-name {
-            font-size: 18px !important; /* Mucho más grande */
-            font-weight: 900 !important; /* Extra negrita */
+            font-size: 15px !important; /* Grande pero seguro */
+            font-weight: 900 !important;
             text-transform: uppercase;
             display: block;
-            margin-bottom: 1mm;
+            margin-bottom: 2px;
+            text-align: center;
         }
 
         /* --- ENCABEZADOS Y PIE --- */
@@ -62,16 +64,20 @@
             text-align: center;
             margin-bottom: 2mm;
         }
-        .ticket-header p, .ticket-footer p {
-            margin: 0.5mm 0;
-            line-height: 1.2;
+        /* Texto de contacto un poco más pequeño */
+        .ticket-header p {
+            font-size: 9px; 
+            margin: 1px 0;
         }
 
         /* --- LÍNEAS DE INFORMACIÓN --- */
         .info-line {
             display: flex;
             justify-content: space-between;
-            margin: 0.5mm 0;
+            margin: 1px 0;
+        }
+        .info-line span {
+            font-size: 10px;
         }
 
         /* --- TABLA DE ARTÍCULOS --- */
@@ -83,21 +89,21 @@
         }
         .items-table th {
             border-bottom: 1px dashed #000;
-            text-align: right; /* Alineamos a derecha para evitar cortes */
+            text-align: right;
             padding-bottom: 1mm;
-            font-size: 10px; /* Encabezados un poco más chicos */
+            font-size: 9px;
         }
-        .items-table td {
-            padding: 1mm 0;
-            vertical-align: top;
-            font-size: 11px;
-        }
-        
-        /* Ajuste de columnas crítico para evitar cortes */
-        .col-desc { text-align: left; width: 42%; }
+        /* Ajuste de columnas milimétrico */
+        .col-desc { text-align: left; width: 45%; }
         .col-qty  { text-align: center; width: 10%; }
-        .col-price { text-align: right; width: 22%; }
-        .col-subtotal { text-align: right; width: 26%; }
+        .col-price { text-align: right; width: 20%; }
+        .col-subtotal { text-align: right; width: 25%; }
+
+        .items-table td {
+            padding: 2px 0;
+            vertical-align: top;
+            font-size: 10px;
+        }
 
         /* --- SEPARADOR --- */
         .separator {
@@ -111,29 +117,36 @@
             border-collapse: collapse;
         }
         .totals-table td {
-            padding: 0.5mm 0;
+            padding: 1px 0;
             border: none;
+            font-size: 10px;
         }
         .totals-table td.label {
             text-align: right;
-            padding-right: 2mm;
-            width: 55%;
+            padding-right: 3px;
+            width: 60%;
         }
         .totals-table td.value {
             text-align: right;
-            width: 45%;
+            width: 40%;
         }
-        .text-lg { font-size: 15px; } 
+        /* El Total Final un poco más grande */
+        .text-lg { font-size: 12px !important; font-weight: bold; } 
+
+        /* --- PIE --- */
+        .ticket-footer p {
+            font-size: 9px;
+            margin: 2px 0;
+        }
 
         /* --- CÓDIGO DE BARRAS --- */
         .barcode-container {
             text-align: center;
             margin-top: 3mm;
             margin-bottom: 5mm;
-            overflow: hidden; /* Evita desborde */
         }
         .barcode-container img {
-            max-width: 100%;
+            max-width: 95%;
             height: auto;
         }
     </style>
@@ -141,20 +154,18 @@
 
 <body>
 
-    <!-- Contenedor ajustado a 45mm -->
     <div class="ticket-container">
-
-        <!-- LOGO (SVG PLACEHOLDER) -->
+        <!-- LOGO -->
         <div class="svg-container">
-           <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Logo" id="logo_img" style="display:none;"> 
-           <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 180" preserveAspectRatio="xMidYMid meet">
-                <!-- Pega aquí el contenido de tu SVG -->
-           </svg>
+            <!-- REEMPLAZA ESTA IMAGEN CON TU SVG REAL -->
+            <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Logo" id="logo_img" style="display:none;"> 
+            <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 180" preserveAspectRatio="xMidYMid meet">
+                <!-- Pega aquí el path de tu logo -->
+            </svg>
         </div>
 
-        <!-- DATOS FIJOS DEL NEGOCIO -->
+        <!-- ENCABEZADO -->
         <div class="ticket-header">
-            <!-- Clase business-name aplicada aquí -->
             <span class="business-name">NOVEDADES GAYTAN</span>
             <p>RFC: GAOE6603281X3</p>
             <p>Av. Hidalgo #8 Moroleón, Gto.</p>
@@ -163,7 +174,7 @@
             <p>www.novedadesgaytan.com.mx</p>
         </div>
 
-        <!-- DATOS VARIABLES -->
+        <!-- INFO TICKET -->
         <div class="info-line">
             <span># Ticket:</span>
             <span id="Ticket_id"></span>
@@ -177,47 +188,43 @@
             <span id="Tipo_id"></span>
         </div>
 
-        <!-- TABLA DE PRODUCTOS -->
+        <!-- PRODUCTOS -->
         <table class="items-table">
             <thead>
                 <tr>
                     <th class="col-desc">Desc</th>
-                    <th class="col-qty">Cant</th>
+                    <th class="col-qty">Cnt</th>
                     <th class="col-price">P.U.</th>
-                    <th class="col-subtotal">Importe</th>
+                    <th class="col-subtotal">Imp</th>
                 </tr>
             </thead>
-            <tbody id="tablaBody">
-                <!-- JS Generará esto -->
-            </tbody>
+            <tbody id="tablaBody"></tbody>
         </table>
 
         <div class="separator"></div>
 
-        <!-- SECCIÓN DE TOTALES DINÁMICA -->
+        <!-- TOTALES -->
         <div class="totals-section">
-            <table class="totals-table" id="totalsTable">
-                <!-- JS Generará esto -->
-            </table>
+            <table class="totals-table" id="totalsTable"></table>
         </div>
 
         <div class="separator"></div>
 
-        <!-- PIE DE TICKET -->
+        <!-- PIE -->
         <div class="ticket-footer">
             <p>*** Gracias por su compra ***</p>
             <p>Necesario ticket para cambio.</p>
             <p>Límite 30 días.</p>
         </div>
 
-        <!-- CÓDIGO DE BARRAS -->
+        <!-- BARCODE -->
         <div class="barcode-container">
             <img id="barcodeImg" src="" alt="Barcode">
         </div>
-    </div> <!-- Fin ticket-container -->
+    </div>
 
     <script>
-        // --- 1. OBTENCIÓN DE PARÁMETROS ---
+        // --- 1. DATOS ---
         const params = new URLSearchParams(window.location.search);
         const getP = (name, def = "") => params.has(name) ? params.get(name) : def;
         const getNum = (name) => parseFloat(getP(name, "0")) || 0;
@@ -230,27 +237,24 @@
             barcodeUrl: getP('BarCode')
         };
 
-        let descripcion = getP('Descripción', 'Varios').split(" , ");
-        let qty = getP('Qty', '1').split(" , ");
-        let precio = getP('PrecioDescuento', '0').split(" , ");
-        let subtotal = getP('SubtotalDescuento', '0').split(" , ");
-
-        const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-
-        // --- 2. POBLAR ENCABEZADOS ---
+        // --- 2. RENDERIZADO BÁSICO ---
         document.getElementById("Ticket_id").textContent = ticketData.id;
         document.getElementById("FechaHora_id").textContent = ticketData.fecha;
         document.getElementById("Tipo_id").textContent = ticketData.tipo.toUpperCase();
 
-        // --- 3. GENERAR TABLA DE PRODUCTOS ---
+        // --- 3. PRODUCTOS ---
+        let descripcion = getP('Descripción', 'Varios').split(" , ");
+        let qty = getP('Qty', '1').split(" , ");
+        let precio = getP('PrecioDescuento', '0').split(" , ");
+        let subtotal = getP('SubtotalDescuento', '0').split(" , ");
+        const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
         const tablaBody = document.getElementById("tablaBody");
-        
+
         descripcion.forEach((desc, index) => {
             if(desc) {
                 let p = parseFloat(precio[index]) || 0;
                 let s = parseFloat(subtotal[index]) || 0;
                 let q = qty[index] || 1;
-
                 let row = document.createElement("tr");
                 row.innerHTML = `
                     <td class="col-desc">${desc}</td>
@@ -262,13 +266,12 @@
             }
         });
 
-        // --- 4. LÓGICA DE TOTALES ---
+        // --- 4. TOTALES (Lógica Switch) ---
         const totalsTable = document.getElementById("totalsTable");
         let htmlTotales = "";
-
         let recibido = getNum('Recibido');
         let cambio = getNum('Cambio');
-        let totalGeneral = getNum('Total'); 
+        let totalGeneral = getNum('Total');
 
         switch (ticketData.tipo) {
             case "Venta":
@@ -279,16 +282,12 @@
                     <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
                     <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
                 `;
-                if(ahorro > 0) {
-                    htmlTotales += `<tr><td class="label">Usted Ahorró:</td><td class="value">${money(ahorro)}</td></tr>`;
-                }
+                if(ahorro > 0) htmlTotales += `<tr><td class="label">Usted Ahorró:</td><td class="value">${money(ahorro)}</td></tr>`;
                 break;
-
             case "Cambio":
                 let saldoCliente = getNum('SaldoAFavorCliente');
                 let saldoEmpresa = getNum('SaldoAFavorEmpresa');
                 let diferencia = getNum('DiferenciaTotal');
-                
                 htmlTotales += `
                     <tr><td class="label">Saldo Favor Cte:</td><td class="value">${money(saldoCliente)}</td></tr>
                     <tr><td class="label">Nuevo Consumo:</td><td class="value">${money(saldoEmpresa)}</td></tr>
@@ -298,11 +297,9 @@
                     <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
                 `;
                 break;
-
             case "Diferido":
                 let abono = getNum('Abono');
                 let restante = getNum('Restante');
-                
                 htmlTotales += `
                     <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
                     <tr><td class="label">Abono Realizado:</td><td class="value">${money(abono)}</td></tr>
@@ -312,18 +309,12 @@
                     <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
                 `;
                 break;
-                
             default:
-                htmlTotales += `
-                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
-                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
-                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
-                `;
+                htmlTotales += `<tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>`;
         }
-
         totalsTable.innerHTML = htmlTotales;
 
-        // --- 5. CÓDIGO DE BARRAS ---
+        // --- 5. BARCODE ---
         const barcodeImg = document.getElementById("barcodeImg");
         if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
             barcodeImg.src = ticketData.barcodeUrl;
@@ -331,11 +322,16 @@
             document.querySelector('.barcode-container').style.display = 'none';
         }
 
-        // --- IMPRESIÓN ---
+        // --- 6. IMPRESIÓN Y CIERRE (Restaurado del original) ---
         window.onload = function() {
             setTimeout(function() {
                 window.print();
-            }, 800);
+                setTimeout(function() {
+                    window.close();
+                    // Fallback por si window.close es bloqueado, intenta navegar atrás
+                    // history.back(); 
+                }, 1000);
+            }, 500);
         }
     </script>
 </body>
