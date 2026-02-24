@@ -103,7 +103,7 @@
             font-size: 11px;
         }
         
-        .col-desc { text-align: left; width: 40%; }
+        .items-table th.col-desc, .col-desc { text-align: left; width: 40%; }
         .col-qty  { text-align: center; width: 10%; }
         .col-price { text-align: right; width: 23%; }
         .col-subtotal { text-align: right; width: 27%; }
@@ -318,8 +318,8 @@
 
         // Si es traslado, mostramos Desde/Hacia
         if (ticketData.tipo.includes("Traslado")) {
-            if (ticketData.desde) headerHTML += `<div><strong>DESDE:</strong> ${ticketData.desde}</div>`;
-            if (ticketData.hacia) headerHTML += `<div><strong>HACIA:</strong> ${ticketData.hacia}</div>`;
+            if (ticketData.desde) headerHTML += `<div><strong>Desde:</strong> ${ticketData.desde}</div>`;
+            if (ticketData.hacia) headerHTML += `<div><strong>Hacia:</strong> ${ticketData.hacia}</div>`;
             if (ticketData.usuario) headerHTML += `<div><strong>Usuario:</strong> ${ticketData.usuario}</div>`;
         } else {
             // Venta, Cambio, Diferido
@@ -375,7 +375,7 @@
 
         if (isTraslado) {
             // --- LOGICA TRASLADO ---
-            htmlTotales += `<tr class="text-lg"><td class="label">TOTAL VALOR:</td><td class="value">${money(totalGeneral)}</td></tr>`;
+            htmlTotales += `<tr class="text-lg"><td class="label">Total Valor:</td><td class="value">${money(totalGeneral)}</td></tr>`;
             
             // Activar Firma y ocultar footer de venta
             document.getElementById("signatureSection").style.display = "block";
@@ -471,3 +471,4 @@
     </script>
 </body>
 </html>
+
