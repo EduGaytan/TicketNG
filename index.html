@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=58mm, initial-scale=1.0">
-    <title>Ticket</title>
+    <title>Ticket V3.0</title>
 
     <style>
-        /* --- CONFIGURACIÓN DE PÁGINA --- */
+        /* --- CONFIGURACIÓN DE PÁGINA (Igual a la versión aprobada) --- */
         @page {
             margin: 0;
             size: 58mm auto;
@@ -14,15 +14,12 @@
 
         body {
             margin: 0;
-            /* Reduje el padding izquierdo a 1mm para ganar espacio */
             padding: 2mm 0 2mm 1mm; 
             width: 58mm;
             background-color: #fff;
         }
 
-        /* --- CONTENEDOR "TÉRMINO MEDIO" --- */
-        /* Aumentado de 44mm a 48mm. 
-           Esto debería llenar el papel sin llegar a la zona de corte */
+        /* --- CONTENEDOR PRINCIPAL --- */
         .ticket-container {
             width: 48mm; 
             text-align: left;
@@ -31,11 +28,11 @@
         /* --- TIPOGRAFÍA --- */
         * {
             font-family: Arial, Helvetica, sans-serif; 
-            font-size: 12px; /* AUMENTADO: De 10px a 12px */
+            font-size: 12px; 
             color: #000;
             box-sizing: border-box;
             font-weight: 600;
-            line-height: 1.15; /* Interlineado ligeramente ajustado */
+            line-height: 1.15;
         }
 
         /* --- LOGO --- */
@@ -45,13 +42,13 @@
             margin-bottom: 2mm;
         }
         #logo {
-            max-width: 95%; /* Logo un poco más grande */
+            max-width: 95%;
             height: auto;
         }
 
         /* --- TÍTULO PRINCIPAL --- */
         .business-name {
-            font-size: 16px !important; /* Grande y claro */
+            font-size: 16px !important;
             font-weight: 900 !important;
             text-transform: uppercase;
             display: block;
@@ -65,11 +62,24 @@
             margin-bottom: 3mm;
         }
         .ticket-header p {
-            font-size: 11px; /* Datos de contacto legibles */
+            font-size: 11px;
             margin: 1px 0;
         }
+        
+        /* Nueva clase para la info extra del encabezado (Sucursal, Cliente, etc) */
+        .header-meta {
+            margin-top: 2mm;
+            text-align: left;
+            border-bottom: 1px dashed #000;
+            padding-bottom: 1mm;
+            margin-bottom: 1mm;
+        }
+        .header-meta div {
+            font-size: 11px;
+            margin-bottom: 1px;
+        }
 
-        /* --- INFO TICKET (Fecha, ID) --- */
+        /* --- INFO TICKET --- */
         .info-line {
             display: flex;
             justify-content: space-between;
@@ -90,11 +100,10 @@
             border-bottom: 1px dashed #000;
             text-align: right;
             padding-bottom: 1mm;
-            font-size: 11px; /* Encabezados compactos */
+            font-size: 11px;
         }
         
-        /* Ajuste de columnas para soportar la letra más grande */
-        .col-desc { text-align: left; width: 40%; } /* Reduje un poco para dar espacio a precios */
+        .col-desc { text-align: left; width: 40%; }
         .col-qty  { text-align: center; width: 10%; }
         .col-price { text-align: right; width: 23%; }
         .col-subtotal { text-align: right; width: 27%; }
@@ -102,8 +111,8 @@
         .items-table td {
             padding: 2px 0;
             vertical-align: top;
-            font-size: 12px; /* Productos en tamaño 12px */
-            word-wrap: break-word; /* Evita que palabras largas rompan el ancho */
+            font-size: 12px;
+            word-wrap: break-word;
         }
 
         /* --- SEPARADOR --- */
@@ -120,7 +129,7 @@
         .totals-table td {
             padding: 2px 0;
             border: none;
-            font-size: 12px; /* Totales en tamaño 12px */
+            font-size: 12px;
         }
         .totals-table td.label {
             text-align: right;
@@ -132,6 +141,29 @@
             width: 45%;
         }
         .text-lg { font-size: 14px !important; font-weight: 800; } 
+        
+        /* Sección de Puntos */
+        .points-section {
+            margin-top: 2mm;
+            border-top: 1px dotted #000;
+            padding-top: 1mm;
+        }
+
+        /* --- FIRMA (Para Traslados) --- */
+        .signature-area {
+            margin-top: 10mm;
+            margin-bottom: 5mm;
+            text-align: center;
+        }
+        .signature-line {
+            border-top: 3px solid #000; /* Línea gruesa */
+            width: 80%;
+            margin: 0 auto 1mm auto;
+        }
+        .signature-text {
+            font-size: 11px;
+            font-weight: bold;
+        }
 
         /* --- PIE DE PÁGINA --- */
         .ticket-footer p {
@@ -160,12 +192,12 @@
             <!-- RECUERDA PONER TU SVG O IMAGEN AQUÍ -->
             <img src="https://via.placeholder.com/150x50?text=LOGO" alt="Logo" id="logo_img" style="display:none;"> 
             <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="100%" height="auto" viewBox="0 0 1280 180" preserveAspectRatio="xMidYMid meet">
-                <!-- Tu path del logo va aquí -->
+                 <!-- Pega aquí el path de tu logo -->
             </svg>
         </div>
 
-        <!-- ENCABEZADO -->
-        <div class="ticket-header">
+        <!-- ENCABEZADO FIJO -->
+        <div class="ticket-header" style="margin-bottom: 1mm;">
             <span class="business-name">NOVEDADES GAYTAN</span>
             <p>RFC: GAOE6603281X3</p>
             <p>Av. Hidalgo #8 Moroleón, Gto.</p>
@@ -174,7 +206,12 @@
             <p>www.novedadesgaytan.com.mx</p>
         </div>
 
-        <!-- INFO TICKET -->
+        <!-- DATOS VARIABLES DEL ENCABEZADO (Sucursal, Cliente, Traslados) -->
+        <div id="dynamicHeader" class="header-meta" style="display:none;">
+            <!-- JS llenará esto -->
+        </div>
+
+        <!-- INFO TICKET BÁSICA -->
         <div class="info-line">
             <span># Ticket:</span>
             <span id="Ticket_id"></span>
@@ -208,10 +245,16 @@
             <table class="totals-table" id="totalsTable"></table>
         </div>
 
-        <div class="separator"></div>
+        <!-- ÁREA DE FIRMA (Solo Traslados) -->
+        <div id="signatureSection" class="signature-area" style="display:none;">
+            <div class="signature-line"></div>
+            <div class="signature-text">FIRMA DE RECIBIDO</div>
+        </div>
+
+        <div class="separator" id="footerSeparator"></div>
 
         <!-- PIE -->
-        <div class="ticket-footer">
+        <div class="ticket-footer" id="footerMsg">
             <p>*** Gracias por su compra ***</p>
             <p>Necesario ticket para cambio.</p>
             <p>Límite 30 días.</p>
@@ -226,37 +269,86 @@
     <script>
         // --- 1. LECTURA DE DATOS ---
         const params = new URLSearchParams(window.location.search);
-        const getP = (name, def = "") => params.has(name) ? params.get(name) : def;
-        const getNum = (name) => parseFloat(getP(name, "0")) || 0;
+        // Función auxiliar: Devuelve null si está vacío para facilitar validación
+        const getP = (name) => {
+            let val = params.get(name);
+            return (val && val.trim() !== "") ? val : null;
+        };
+        const getNum = (name) => parseFloat(getP(name) || "0");
 
         const ticketData = {
             id: getP('Ticket'),
             fecha: getP('FechaHora'),
-            tipo: getP('TipoTicket', 'Venta'),
-            formaPago: getP('FormaPago'),
+            tipo: getP('TipoTicket') || 'Venta',
+            
+            // Datos nuevos V3.0
+            sucursal: getP('Sucursal'),
+            caja: getP('Caja'),
+            usuario: getP('Usuario'),
+            vendedor: getP('Vendedor'),
+            cliente: getP('Cliente'),
+            desde: getP('Desde'),
+            hacia: getP('Hacia'),
+            
+            // Financieros
+            formaPago: getP('FormaPago'), // Texto (Efectivo, Tarjeta, Mixto)
+            recEfectivo: getNum('RecibidoEfectivo'),
+            recTarjeta: getNum('RecibidoTarjeta'),
+            totalRecibido: getNum('TotalRecibido'), // Suma total
+            qtyPzas: getNum('QtyPzas'),
+            
+            // Puntos
+            ptosGanados: getNum('PuntosGanados'),
+            ptosGastados: getNum('PuntosGastados'),
+            ptosActuales: getNum('PuntosActuales'),
+            
             barcodeUrl: getP('BarCode')
         };
 
+        const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
         // --- 2. RENDERIZADO DATOS FIJOS ---
-        document.getElementById("Ticket_id").textContent = ticketData.id;
-        document.getElementById("FechaHora_id").textContent = ticketData.fecha;
+        document.getElementById("Ticket_id").textContent = ticketData.id || "";
+        document.getElementById("FechaHora_id").textContent = ticketData.fecha || "";
         document.getElementById("Tipo_id").textContent = ticketData.tipo.toUpperCase();
 
-        // --- 3. GENERAR LISTA DE PRODUCTOS ---
-        let descripcion = getP('Descripción', 'Varios').split(" , ");
-        let qty = getP('Qty', '1').split(" , ");
-        let precio = getP('PrecioDescuento', '0').split(" , ");
-        let subtotal = getP('SubtotalDescuento', '0').split(" , ");
-        const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        // --- 3. LOGICA DE ENCABEZADO DINÁMICO ---
+        const dynHeader = document.getElementById("dynamicHeader");
+        let headerHTML = "";
+
+        // Si es traslado, mostramos Desde/Hacia
+        if (ticketData.tipo.includes("Traslado")) {
+            if (ticketData.desde) headerHTML += `<div><strong>DESDE:</strong> ${ticketData.desde}</div>`;
+            if (ticketData.hacia) headerHTML += `<div><strong>HACIA:</strong> ${ticketData.hacia}</div>`;
+            if (ticketData.usuario) headerHTML += `<div><strong>Usuario:</strong> ${ticketData.usuario}</div>`;
+        } else {
+            // Venta, Cambio, Diferido
+            if (ticketData.sucursal) headerHTML += `<div><strong>Sucursal:</strong> ${ticketData.sucursal}</div>`;
+            if (ticketData.caja) headerHTML += `<div><strong>Caja:</strong> ${ticketData.caja}</div>`;
+            if (ticketData.vendedor) headerHTML += `<div><strong>Vendedor:</strong> ${ticketData.vendedor}</div>`;
+            if (ticketData.usuario && !ticketData.vendedor) headerHTML += `<div><strong>Atendió:</strong> ${ticketData.usuario}</div>`;
+            if (ticketData.cliente) headerHTML += `<div><strong>Cliente:</strong> ${ticketData.cliente}</div>`;
+        }
+
+        if (headerHTML !== "") {
+            dynHeader.innerHTML = headerHTML;
+            dynHeader.style.display = "block";
+        }
+
+        // --- 4. LISTA DE PRODUCTOS ---
+        // Nota: Mantenemos los valores por defecto "Varios/0" solo si descripción viene nula para evitar errores
+        let descripcion = (getP('Descripción') || "Varios").split(" , ");
+        let qty = (getP('Qty') || "1").split(" , ");
+        let precio = (getP('PrecioDescuento') || "0").split(" , ");
+        let subtotal = (getP('SubtotalDescuento') || "0").split(" , ");
         const tablaBody = document.getElementById("tablaBody");
 
         descripcion.forEach((desc, index) => {
-            if(desc) {
+            if(desc && desc.trim() !== "") {
                 let p = parseFloat(precio[index]) || 0;
                 let s = parseFloat(subtotal[index]) || 0;
                 let q = qty[index] || 1;
                 let row = document.createElement("tr");
-                // Insertamos filas
                 row.innerHTML = `
                     <td class="col-desc">${desc}</td>
                     <td class="col-qty">${q}</td>
@@ -267,55 +359,99 @@
             }
         });
 
-        // --- 4. CÁLCULO DE TOTALES (Switch) ---
+        // --- 5. TOTALES Y PAGOS (Switch) ---
         const totalsTable = document.getElementById("totalsTable");
         let htmlTotales = "";
-        let recibido = getNum('Recibido');
+        
+        // Variables comunes
         let cambio = getNum('Cambio');
-        let totalGeneral = getNum('Total');
+        let totalGeneral = getNum('Total'); // Puede ser Total TPV o DiferenciaTotal según fórmula
+        let isTraslado = ticketData.tipo.includes("Traslado");
 
-        switch (ticketData.tipo) {
-            case "Venta":
-                let ahorro = getNum('Ahorro');
-                htmlTotales += `
-                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
-                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
-                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
-                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
-                `;
-                if(ahorro > 0) htmlTotales += `<tr><td class="label">Usted Ahorró:</td><td class="value">${money(ahorro)}</td></tr>`;
-                break;
-            case "Cambio":
-                let saldoCliente = getNum('SaldoAFavorCliente');
-                let saldoEmpresa = getNum('SaldoAFavorEmpresa');
-                let diferencia = getNum('DiferenciaTotal');
-                htmlTotales += `
-                    <tr><td class="label">Saldo Favor Cte:</td><td class="value">${money(saldoCliente)}</td></tr>
-                    <tr><td class="label">Nuevo Consumo:</td><td class="value">${money(saldoEmpresa)}</td></tr>
-                    <tr class="text-lg"><td class="label">DIFERENCIA:</td><td class="value">${money(diferencia)}</td></tr>
-                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
-                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
-                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
-                `;
-                break;
-            case "Diferido":
-                let abono = getNum('Abono');
-                let restante = getNum('Restante');
-                htmlTotales += `
-                    <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
-                    <tr><td class="label">Abono Realizado:</td><td class="value">${money(abono)}</td></tr>
-                    <tr><td class="label">Saldo Restante:</td><td class="value">${money(restante)}</td></tr>
-                    <tr><td class="label">Forma Pago:</td><td class="value">${ticketData.formaPago}</td></tr>
-                    <tr><td class="label">Recibido:</td><td class="value">${money(recibido)}</td></tr>
-                    <tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>
-                `;
-                break;
-            default:
-                htmlTotales += `<tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>`;
+        // Fila de Piezas (Común a todos si > 0)
+        if (ticketData.qtyPzas > 0) {
+            htmlTotales += `<tr><td class="label">Total Pzas:</td><td class="value">${ticketData.qtyPzas}</td></tr>`;
         }
+
+        if (isTraslado) {
+            // --- LOGICA TRASLADO ---
+            htmlTotales += `<tr class="text-lg"><td class="label">TOTAL VALOR:</td><td class="value">${money(totalGeneral)}</td></tr>`;
+            
+            // Activar Firma y ocultar footer de venta
+            document.getElementById("signatureSection").style.display = "block";
+            document.getElementById("footerMsg").style.display = "none";
+            document.getElementById("footerSeparator").style.display = "none";
+
+        } else {
+            // --- LOGICA VENTA / CAMBIO / DIFERIDO ---
+            
+            // Lógica específica por tipo
+            switch (ticketData.tipo) {
+                case "Venta":
+                    let ahorro = getNum('Ahorro');
+                    htmlTotales += `<tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>`;
+                    if(ahorro > 0) htmlTotales += `<tr><td class="label">Usted Ahorró:</td><td class="value">${money(ahorro)}</td></tr>`;
+                    break;
+
+                case "Cambio":
+                    let saldoCliente = getNum('SaldoAFavorCliente');
+                    let saldoEmpresa = getNum('SaldoAFavorEmpresa');
+                    let diferencia = getNum('DiferenciaTotal');
+                    htmlTotales += `
+                        <tr><td class="label">Saldo Favor Cte:</td><td class="value">${money(saldoCliente)}</td></tr>
+                        <tr><td class="label">Nuevo Consumo:</td><td class="value">${money(saldoEmpresa)}</td></tr>
+                        <tr class="text-lg"><td class="label">DIFERENCIA:</td><td class="value">${money(diferencia)}</td></tr>
+                    `;
+                    break;
+
+                case "Diferido":
+                    let abono = getNum('Abono');
+                    let restante = getNum('Restante');
+                    htmlTotales += `
+                        <tr class="text-lg"><td class="label">TOTAL:</td><td class="value">${money(totalGeneral)}</td></tr>
+                        <tr><td class="label">Abono Realizado:</td><td class="value">${money(abono)}</td></tr>
+                        <tr><td class="label">Saldo Restante:</td><td class="value">${money(restante)}</td></tr>
+                    `;
+                    break;
+            }
+
+            // --- DESGLOSE DE PAGOS (Común para Venta/Cambio/Diferido) ---
+            // Solo mostramos forma de pago si hay movimiento de dinero
+            if (ticketData.recEfectivo > 0 || ticketData.recTarjeta > 0 || totalGeneral > 0) {
+                htmlTotales += `<tr><td colspan="2" style="border-top:1px dashed #ccc; height:2px;"></td></tr>`; // Separador sutil
+                
+                // Mostrar Efectivo si existe
+                if (ticketData.recEfectivo > 0) {
+                    htmlTotales += `<tr><td class="label">Pago Efectivo:</td><td class="value">${money(ticketData.recEfectivo)}</td></tr>`;
+                }
+                // Mostrar Tarjeta si existe
+                if (ticketData.recTarjeta > 0) {
+                    htmlTotales += `<tr><td class="label">Pago Tarjeta:</td><td class="value">${money(ticketData.recTarjeta)}</td></tr>`;
+                }
+                
+                // Si no hay desglose pero hay un "recibido" genérico (compatibilidad)
+                if (ticketData.recEfectivo == 0 && ticketData.recTarjeta == 0 && ticketData.totalRecibido > 0) {
+                     htmlTotales += `<tr><td class="label">Recibido:</td><td class="value">${money(ticketData.totalRecibido)}</td></tr>`;
+                }
+
+                // Cambio
+                htmlTotales += `<tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>`;
+            }
+
+            // --- PUNTOS (Si aplican) ---
+            if (ticketData.ptosGanados > 0 || ticketData.ptosGastados > 0 || ticketData.ptosActuales > 0) {
+                htmlTotales += `
+                    <tr><td colspan="2" class="points-section"></td></tr>
+                    ${ticketData.ptosGanados > 0 ? `<tr><td class="label">Puntos Ganados:</td><td class="value">${ticketData.ptosGanados}</td></tr>` : ''}
+                    ${ticketData.ptosGastados > 0 ? `<tr><td class="label">Puntos Usados:</td><td class="value">${ticketData.ptosGastados}</td></tr>` : ''}
+                    ${ticketData.ptosActuales ? `<tr><td class="label">Puntos Actuales:</td><td class="value">${ticketData.ptosActuales}</td></tr>` : ''}
+                `;
+            }
+        }
+
         totalsTable.innerHTML = htmlTotales;
 
-        // --- 5. MOSTRAR CÓDIGO DE BARRAS ---
+        // --- 6. BARCODE ---
         const barcodeImg = document.getElementById("barcodeImg");
         if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
             barcodeImg.src = ticketData.barcodeUrl;
@@ -323,13 +459,12 @@
             document.querySelector('.barcode-container').style.display = 'none';
         }
 
-        // --- 6. IMPRIMIR Y CERRAR ---
+        // --- 7. IMPRIMIR ---
         window.onload = function() {
             setTimeout(function() {
                 window.print();
                 setTimeout(function() {
                     window.close();
-                    // history.back(); // Opción alternativa si close() falla
                 }, 1000);
             }, 500);
         }
