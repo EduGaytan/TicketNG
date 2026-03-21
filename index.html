@@ -6,7 +6,7 @@
     <title>Ticket V3.0</title>
 
     <style>
-        /* --- CONFIGURACIÓN DE PÁGINA (Igual a la versión aprobada) --- */
+        /* --- CONFIGURACIÓN DE PÁGINA --- */
         @page {
             margin: 0;
             size: 58mm auto;
@@ -181,6 +181,7 @@
             max-width: 100%;
             height: auto;
         }
+
         /* --- ESTILOS PARA TICKET DE REGALO --- */
         .cut-line {
             border-top: 2px dashed #000;
@@ -384,10 +385,10 @@
             hacia: getP('Hacia'),
             
             // Financieros
-            formaPago: getP('FormaPago'), // Texto (Efectivo, Tarjeta, Mixto)
+            formaPago: getP('FormaPago'), 
             recEfectivo: getNum('RecibidoEfectivo'),
             recTarjeta: getNum('RecibidoTarjeta'),
-            totalRecibido: getNum('TotalRecibido'), // Suma total
+            totalRecibido: getNum('TotalRecibido'), 
             qtyPzas: getNum('QtyPzas'),
             
             // Puntos
@@ -395,9 +396,10 @@
             ptosGastados: getNum('PuntosGastados'),
             ptosActuales: getNum('PuntosActuales'),
             
-            barcodeUrl: getP('BarCode')
-
-            regalo: getP('Regalo')
+            barcodeUrl: getP('BarCode'),
+            
+            // --- AQUÍ ESTABA EL ERROR, FALTABA LA COMA ARRIBA ---
+            regalo: getP('Regalo') 
         };
 
         const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -431,7 +433,6 @@
         }
 
         // --- 4. LISTA DE PRODUCTOS ---
-        // Nota: Mantenemos los valores por defecto "Varios/0" solo si descripción viene nula para evitar errores
         let descripcion = (getP('Descripción') || "Varios").split(" , ");
         let qty = (getP('Qty') || "1").split(" , ");
         let precio = (getP('PrecioDescuento') || "0").split(" , ");
@@ -460,27 +461,22 @@
         
         // Variables comunes
         let cambio = getNum('Cambio');
-        let totalGeneral = getNum('Total'); // Puede ser Total TPV o DiferenciaTotal según fórmula
+        let totalGeneral = getNum('Total'); 
         let isTraslado = ticketData.tipo.includes("Traslado");
 
-        // Fila de Piezas (Común a todos si > 0)
+        // Fila de Piezas
         if (ticketData.qtyPzas > 0) {
             htmlTotales += `<tr><td class="label">Total Pzas:</td><td class="value">${ticketData.qtyPzas}</td></tr>`;
         }
 
         if (isTraslado) {
-            // --- LOGICA TRASLADO ---
             htmlTotales += `<tr class="text-lg"><td class="label">Total Valor:</td><td class="value">${money(totalGeneral)}</td></tr>`;
             
-            // Activar Firma y ocultar footer de venta
             document.getElementById("signatureSection").style.display = "block";
             document.getElementById("footerMsg").style.display = "none";
             document.getElementById("footerSeparator").style.display = "none";
 
         } else {
-            // --- LOGICA VENTA / CAMBIO / DIFERIDO ---
-            
-            // Lógica específica por tipo
             switch (ticketData.tipo) {
                 case "Venta":
                     let ahorro = getNum('Ahorro');
@@ -510,30 +506,19 @@
                     break;
             }
 
-            // --- DESGLOSE DE PAGOS (Común para Venta/Cambio/Diferido) ---
-            // Solo mostramos forma de pago si hay movimiento de dinero
             if (ticketData.recEfectivo > 0 || ticketData.recTarjeta > 0 || totalGeneral > 0) {
-                htmlTotales += `<tr><td colspan="2" style="border-top:1px dashed #ccc; height:2px;"></td></tr>`; // Separador sutil
+                htmlTotales += `<tr><td colspan="2" style="border-top:1px dashed #ccc; height:2px;"></td></tr>`; 
                 
-                // Mostrar Efectivo si existe
-                if (ticketData.recEfectivo > 0) {
-                    htmlTotales += `<tr><td class="label">Pago Efectivo:</td><td class="value">${money(ticketData.recEfectivo)}</td></tr>`;
-                }
-                // Mostrar Tarjeta si existe
-                if (ticketData.recTarjeta > 0) {
-                    htmlTotales += `<tr><td class="label">Pago Tarjeta:</td><td class="value">${money(ticketData.recTarjeta)}</td></tr>`;
-                }
+                if (ticketData.recEfectivo > 0) htmlTotales += `<tr><td class="label">Pago Efectivo:</td><td class="value">${money(ticketData.recEfectivo)}</td></tr>`;
+                if (ticketData.recTarjeta > 0) htmlTotales += `<tr><td class="label">Pago Tarjeta:</td><td class="value">${money(ticketData.recTarjeta)}</td></tr>`;
                 
-                // Si no hay desglose pero hay un "recibido" genérico (compatibilidad)
                 if (ticketData.recEfectivo == 0 && ticketData.recTarjeta == 0 && ticketData.totalRecibido > 0) {
                      htmlTotales += `<tr><td class="label">Recibido:</td><td class="value">${money(ticketData.totalRecibido)}</td></tr>`;
                 }
 
-                // Cambio
                 htmlTotales += `<tr><td class="label">Cambio:</td><td class="value">${money(cambio)}</td></tr>`;
             }
 
-            // --- PUNTOS (Si aplican) ---
             if (ticketData.ptosGanados > 0 || ticketData.ptosGastados > 0 || ticketData.ptosActuales > 0) {
                 htmlTotales += `
                     <tr><td colspan="2" class="points-section"></td></tr>
@@ -546,7 +531,6 @@
 
         totalsTable.innerHTML = htmlTotales;
 
-        // --- 6. BARCODE ---
         const barcodeImg = document.getElementById("barcodeImg");
         if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
             barcodeImg.src = ticketData.barcodeUrl;
@@ -556,22 +540,18 @@
 
         // --- LOGICA DE TICKET DE REGALO ---
         if (ticketData.regalo === "Si") {
-            // 1. Mostrar la sección
             document.getElementById("giftReceiptSection").style.display = "block";
 
-            // 2. Llenar Sucursal, Caja y Atendió (Usuario)
             let headerGiftHTML = "";
             if (ticketData.sucursal) headerGiftHTML += `<div><strong>Sucursal:</strong> ${ticketData.sucursal}</div>`;
             if (ticketData.caja) headerGiftHTML += `<div><strong>Caja:</strong> ${ticketData.caja}</div>`;
             if (ticketData.usuario) headerGiftHTML += `<div><strong>Atendió:</strong> ${ticketData.usuario}</div>`;
             document.getElementById("dynamicHeaderGift").innerHTML = headerGiftHTML;
 
-            // 3. Llenar Datos Básicos
             document.getElementById("Ticket_id_gift").textContent = ticketData.id || "";
             document.getElementById("FechaHora_id_gift").textContent = ticketData.fecha || "";
             document.getElementById("Tipo_id_gift").textContent = ticketData.tipo.toUpperCase();
 
-            // 4. Llenar Tabla de Productos (Ocultando precios)
             const tablaBodyGift = document.getElementById("tablaBodyGift");
             descripcion.forEach((desc, index) => {
                 if(desc && desc.trim() !== "") {
@@ -585,10 +565,8 @@
                 }
             });
 
-            // 5. Total de Piezas
             document.getElementById("qtyPzasGift").textContent = ticketData.qtyPzas;
 
-            // 6. Código de Barras
             const barcodeImgGift = document.getElementById("barcodeImgGift");
             if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
                 barcodeImgGift.src = ticketData.barcodeUrl;
@@ -609,4 +587,3 @@
     </script>
 </body>
 </html>
-
