@@ -181,6 +181,24 @@
             max-width: 100%;
             height: auto;
         }
+        /* --- ESTILOS PARA TICKET DE REGALO --- */
+        .cut-line {
+            border-top: 2px dashed #000;
+            margin: 8mm 0 4mm 0;
+            position: relative;
+            text-align: center;
+        }
+        .cut-line::after {
+            content: "✂ - - - - - - - - - - - -";
+            position: absolute;
+            top: -7px;
+            left: 0;
+            width: 100%;
+            background: #fff;
+            font-size: 14px;
+            color: #000;
+            letter-spacing: 2px;
+        }
     </style>
 </head>
 
@@ -264,6 +282,81 @@
         <div class="barcode-container">
             <img id="barcodeImg" src="" alt="Barcode">
         </div>
+
+        <!-- ========================================== -->
+        <!-- SECCIÓN: TICKET DE REGALO (Oculto por defecto) -->
+        <!-- ========================================== -->
+        <div id="giftReceiptSection" style="display: none;">
+            
+            <!-- Línea punteada de recorte -->
+            <div class="cut-line"></div>
+
+            <!-- ENCABEZADO FIJO (Regalo) -->
+            <div class="ticket-header" style="margin-bottom: 1mm;">
+                <span class="business-name">NOVEDADES GAYTAN</span>
+                <p>RFC: GAOE6603281X3</p>
+                <p>Av. Hidalgo #8 Moroleón, Gto.</p>
+                <p>Tel: 445 458 2720</p>
+                <p>WhatsApp: 445 100 9780</p>
+                <p>www.novedadesgaytan.com.mx</p>
+            </div>
+            <div class="ticket-header">
+                <p style="font-weight:bold; font-size:14px; margin-top:2mm;">TICKET DE REGALO</p>
+            </div>
+
+            <!-- ENCABEZADO DINÁMICO (Sucursal, Caja, Atendió) -->
+            <div id="dynamicHeaderGift" class="header-meta"></div>
+
+            <!-- INFO TICKET -->
+            <div class="info-line">
+                <span># Ticket:</span>
+                <span id="Ticket_id_gift"></span>
+            </div>
+            <div class="info-line">
+                <span>Fecha:</span>
+                <span id="FechaHora_id_gift"></span>
+            </div>
+            <div class="info-line">
+                <span>Tipo:</span>
+                <span id="Tipo_id_gift"></span>
+            </div>
+
+            <!-- PRODUCTOS (Solo Desc y Cantidad) -->
+            <table class="items-table">
+                <thead>
+                    <tr>
+                        <th class="col-desc" style="width: 80%;">Desc</th>
+                        <th class="col-qty" style="text-align: right; width: 20%;">Cnt</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaBodyGift"></tbody>
+            </table>
+
+            <div class="separator"></div>
+
+            <!-- TOTAL PIEZAS -->
+            <table class="totals-table">
+                <tr>
+                    <td class="label" style="width: 80%;">Total Pzas:</td>
+                    <td class="value" id="qtyPzasGift" style="width: 20%; text-align:right;"></td>
+                </tr>
+            </table>
+
+            <div class="separator"></div>
+
+            <!-- PIE DE TICKET -->
+            <div class="ticket-footer">
+                <p>*** Gracias por su compra ***</p>
+                <p>Necesario ticket para cambio.</p>
+                <p>Límite 30 días.</p>
+            </div>
+
+            <!-- CÓDIGO DE BARRAS -->
+            <div class="barcode-container">
+                <img id="barcodeImgGift" src="" alt="Barcode">
+            </div>
+        </div>
+        <!-- ====== FIN TICKET REGALO ====== -->
     </div>
 
     <script>
@@ -303,6 +396,8 @@
             ptosActuales: getNum('PuntosActuales'),
             
             barcodeUrl: getP('BarCode')
+
+            regalo: getP('Regalo')
         };
 
         const money = (num) => "$" + num.toLocaleString('es-MX', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -457,6 +552,49 @@
             barcodeImg.src = ticketData.barcodeUrl;
         } else {
             document.querySelector('.barcode-container').style.display = 'none';
+        }
+
+        // --- LOGICA DE TICKET DE REGALO ---
+        if (ticketData.regalo === "Si") {
+            // 1. Mostrar la sección
+            document.getElementById("giftReceiptSection").style.display = "block";
+
+            // 2. Llenar Sucursal, Caja y Atendió (Usuario)
+            let headerGiftHTML = "";
+            if (ticketData.sucursal) headerGiftHTML += `<div><strong>Sucursal:</strong> ${ticketData.sucursal}</div>`;
+            if (ticketData.caja) headerGiftHTML += `<div><strong>Caja:</strong> ${ticketData.caja}</div>`;
+            if (ticketData.usuario) headerGiftHTML += `<div><strong>Atendió:</strong> ${ticketData.usuario}</div>`;
+            document.getElementById("dynamicHeaderGift").innerHTML = headerGiftHTML;
+
+            // 3. Llenar Datos Básicos
+            document.getElementById("Ticket_id_gift").textContent = ticketData.id || "";
+            document.getElementById("FechaHora_id_gift").textContent = ticketData.fecha || "";
+            document.getElementById("Tipo_id_gift").textContent = ticketData.tipo.toUpperCase();
+
+            // 4. Llenar Tabla de Productos (Ocultando precios)
+            const tablaBodyGift = document.getElementById("tablaBodyGift");
+            descripcion.forEach((desc, index) => {
+                if(desc && desc.trim() !== "") {
+                    let q = qty[index] || 1;
+                    let row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td class="col-desc" style="width: 80%; padding-right: 5px;">${desc}</td>
+                        <td class="col-qty" style="text-align: right; width: 20%;">${q}</td>
+                    `;
+                    tablaBodyGift.appendChild(row);
+                }
+            });
+
+            // 5. Total de Piezas
+            document.getElementById("qtyPzasGift").textContent = ticketData.qtyPzas;
+
+            // 6. Código de Barras
+            const barcodeImgGift = document.getElementById("barcodeImgGift");
+            if (ticketData.barcodeUrl && ticketData.barcodeUrl.trim() !== "") {
+                barcodeImgGift.src = ticketData.barcodeUrl;
+            } else {
+                barcodeImgGift.style.display = 'none';
+            }
         }
 
         // --- 7. IMPRIMIR ---
